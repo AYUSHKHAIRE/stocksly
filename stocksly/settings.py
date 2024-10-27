@@ -26,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = 'django-insecure-74_^_15u094l&i7f45ipud!lz!@66jf6sm_16p2=9t_dnoj(2&'
-DEBUG = True
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
-DATABASE_URL = 'postgresql://stocksly_user:bfpCrtBXJAobhgR8ZhHVjSLzJw6jajYb@dpg-cse7v8dsvqrc73etuurg-a.singapore-postgres.render.com/stocksly'
+SECRET_KEY = os.environ.get("SECERT_KEY")
+DEBUG = os.environ.get("DEBUG","False").lower() == "true"
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(' ')
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # Application definition
 
