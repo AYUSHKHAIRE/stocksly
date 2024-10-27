@@ -25,27 +25,26 @@ output : nothing
 '''
 def update_data_for_today():
     print("task was schduled !")
-    if STM.firstrun == 0:
-        logger.info("starting update for today ___________________________________-")
-        symbols = STM.collect_stock_symbols()
-        stocks_list_for_setup = []
-        new_list = symbols['names']
-        catagories = []
-        for st in new_list:
-            for key,value in st.items():
-                for v in value:
-                    stocks_list_for_setup.append(
-                        [key,v]
-                    )
-                if key not in catagories:
-                    catagories.append(key)
-        setup_stocks_model(stocks_list_for_setup)
-        
-        STM.update_prices_for_daily(stocks_list_for_setup[:10])
-        STM.update_prices_for_per_minute(stocks_list_for_setup[:10])
+
+    logger.info("starting update for today ___________________________________-")
+    symbols = STM.collect_stock_symbols()
+    stocks_list_for_setup = []
+    new_list = symbols['names']
+    catagories = []
+    for st in new_list:
+        for key,value in st.items():
+            for v in value:
+                stocks_list_for_setup.append(
+                    [key,v]
+                )
+            if key not in catagories:
+                catagories.append(key)
+    setup_stocks_model(stocks_list_for_setup)
     
-        STM.firstrun = 1
-        logger.info("finishing update for today ___________________________________-")
+    STM.update_prices_for_daily(stocks_list_for_setup[:10])
+    STM.update_prices_for_per_minute(stocks_list_for_setup[:10])
+
+    logger.info("finishing update for today ___________________________________-")
 
 '''
 input : request
@@ -59,6 +58,9 @@ a json response containing stock data .
 '''
 def get_available_stocks(request):
     available_stocks= STM.check_stock_availability()
+    if STM.firstrun == 0:
+        update_data_for_today()
+        STM.firstrun = 1
     return JsonResponse(
         available_stocks,
         safe=False
