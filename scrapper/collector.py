@@ -7,9 +7,7 @@ import time
 from tqdm import tqdm
 import os
 from datetime import datetime,timedelta
-import json
 from scrapper.logger_config import logger
-import shutil
 from scrapper.models import StockInformation , StocksCategory ,PerMinuteTrade,DayTrade
 '''
 A class handles all stocks related operations .
@@ -202,53 +200,64 @@ class stocksManager:
     
     output : nothing 
     '''
-    def update_prices_for_daily(
-        self,
-        symbol_list
-        ):
+    def update_prices_for_daily(self, symbol_list):
         current_timestamp = int(time.time())
         current_time = datetime.fromtimestamp(current_timestamp)
         human_readable_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-        date_str = "2015-01-01"
-        date_obj = datetime.strptime(
-            date_str, "%Y-%m-%d")
-        period1 = int(time.mktime(
-            date_obj.timetuple())
-        )
-        period2 = current_timestamp  
-        logger.warning(f"daily data for todays date {human_readable_time}")
-        logger.info(f"checking updates for period1={period1} & period2={period2} for stocks daily _________________")
+        
+        # Start and end periods for data retrieval
+        start_date_str = "2015-01-01"
+        start_date_obj = datetime.strptime(start_date_str, "%Y-%m-%d")
+        period1 = int(time.mktime(start_date_obj.timetuple()))
+        period2 = current_timestamp
+        
+        logger.warning(f"Daily data for today's date {human_readable_time}")
+        logger.info(f"Checking updates for period1={period1} & period2={period2} for stocks daily")
+
+        # Define base path for daily updates
+        files_path = f'{BASE_DIR}/scrapper/data/daily_update/'
+
         for stock in tqdm(symbol_list):
-            stock_ = stock[1].replace(' ','')
-            json_path = f'{BASE_DIR}/scrapper/data/daily_update/{stock_}.json'
+            stock_symbol = stock[1].replace(' ', '')
+            json_path = f'{files_path}/{stock_symbol}.json'
             os.makedirs(os.path.dirname(json_path), exist_ok=True)
-            url = f'https://query1.finance.yahoo.com/v8/finance/chart/{stock_}?events=capitalGain%7Cdiv%7Csplit&formatted=true&includeAdjustedClose=true&interval=1d&period1={period1}&period2={period2}&symbol={stock_}&userYfid=true&lang=en-US&region=US'
-            r = rq.get(url, headers=self.headers)
-            if r.status_code == 200:
-                with open(json_path,'wb') as file:
-                    file.write(r.content)
+            
+            url = (f'https://query1.finance.yahoo.com/v8/finance/chart/{stock_symbol}?events=capitalGain%7Cdiv%7Csplit'
+                f'&formatted=true&includeAdjustedClose=true&interval=1d&period1={period1}&period2={period2}'
+                f'&symbol={stock_symbol}&userYfid=true&lang=en-US&region=US')
+            
+            response = rq.get(url, headers=self.headers)
+            
+            if response.status_code == 200:
+                with open(json_path, 'wb') as file:
+                    file.write(response.content)
             else:
-                logger.warning("request failed",url,r.status_code)
+                logger.warning(f"Request failed: {url}, Status code: {response.status_code}")
                 continue
-        filespaths = f'{BASE_DIR}/scrapper/data/daily_update/'
-        jsnlistdaily = os.listdir(filespaths)
-        
-        logger.info('working on collected daily data _________________________________-')
-        for jso in tqdm(jsnlistdaily):
+
+        logger.info("Processing collected daily data")
+
+        # Iterate through downloaded files to add human-readable timestamps
+        for file_name in tqdm(os.listdir(files_path)):
+            file_path = os.path.join(files_path, file_name)
             try:
-                jsonf = pd.read_json(f'{filespaths}/{jso}')
-            except:
-                logger.warning("cannot read json " ,jso)
+                json_data = pd.read_json(file_path)
+                timestamp = json_data['chart']['result'][0].get('timestamp')
+                
+                # Convert timestamps to human-readable format if present
+                if timestamp:
+                    new_timestamps = self.return_human_timestamp(timestamp)
+                    json_data['chart']['result'][0]['timestamp'] = new_timestamps
+                
+                # Save the updated JSON data back to the file
+                json_data.to_json(file_path, orient='records', indent=4)
+            
+            except ValueError as e:
+                logger.warning(f"Cannot read JSON: {file_name}. Error: {e}")
                 continue
-            jsondict = jsonf.to_dict()
-            timestamp = jsondict.get('chart').get('result')[0].get('timestamp')
-            if timestamp is not None:
-                new_timestamps = self.return_human_timestamp(timestamp)
-                jsondict['chart']['result'][0]['timestamp'] = new_timestamps
-            with open(f'{filespaths}/{jso}', 'w') as json_file:
-                json.dump(jsondict, json_file, indent=4)
-        logger.info("daily data update finished _________________________________")
-        
+
+        logger.info("Daily data update finished.")
+  
     '''
     input:
     stocksymbol : string : stocks symbol 
@@ -319,12 +328,11 @@ class stocksManager:
 
         path = f'{BASE_DIR}/scrapper/data/daily_update/'
         data = pd.read_json(f'{path}/{stocksymbol}.json').to_dict()
-
-        timestmp = data.get('chart').get('result')[0].get('timestamp', [])
+        timestmp = data.get('chart')[0][0].get("timestamp")
         dates =   [ 
                    str(t.split(' ')[0]) for t in timestmp ]
         unix_dates = self.return_unix_timestamps(timestmp)
-        new_data = data.get('chart').get('result')[0].get('indicators').get('quote')[0]
+        new_data = data.get('chart')[0][0].get('indicators').get('quote')[0]
 
         now_timestamp = datetime.now().timestamp()
         global_startindex = None
@@ -521,69 +529,76 @@ class stocksManager:
     output:
     None
     '''
-    def update_prices_for_per_minute(
-        self,
-        symbol_list,
-    ):
-        os.makedirs(f'{BASE_DIR}/scrapper/data/per_minute',exist_ok=True)
+    def update_prices_for_per_minute(self, symbol_list):
+        os.makedirs(f'{BASE_DIR}/scrapper/data/per_minute', exist_ok=True)
         todays_date = datetime.now().strftime('%Y-%m-%d 00:00:00')
         today = datetime.now() 
-        '''check if it is saturday .'''
-        logger.warning("checking for saturday updates .")
+
+        '''Check if it is Sunday (weekday=6).'''
+        logger.warning("Checking for Sunday updates.")
         if today.weekday() == 6: 
-            logger.warning("it is sunday today .")
-            logger.warning(f"per minute data for todays date {todays_date}")
+            logger.warning("It is Sunday today.")
+            logger.warning(f"Per minute data for today's date {todays_date}")
+            
+            # Calculate periods for data retrieval
             date_time_obj = datetime.strptime(todays_date, '%Y-%m-%d %H:%M:%S')
             period1 = int(date_time_obj.timestamp())
             seven_days_back = date_time_obj - timedelta(days=7)
             period2 = int(seven_days_back.timestamp())
             filespaths = f'{BASE_DIR}/scrapper/data/per_minute/'
-            logger.info(f"checking updates for period1={period1} & period2={period2} for stocks per minute _________________")
-            for stock in tqdm(symbol_list):
-                stock = stock[1].replace(' ','')
-                link = f'https://query2.finance.yahoo.com/v8/finance/chart/{stock}?period1={period2}&period2={period1}&interval=1m&includePrePost=true&events=div%7Csplit%7Cearn&&lang=en-US&region=US'
-                r = rq.get(
-                    link,
-                    headers = self.headers
-                )
-                path = f'{BASE_DIR}/scrapper/data/per_minute/{stock}/_{period2}_{period1}.json'
-                os.makedirs(os.path.dirname(path), exist_ok=True)
-                if r.status_code == 200:
-                    with open(path,'wb') as jsn:
-                        jsn.write(r.content)
-                else:
-                    logger.warning("request failed",link,r.status_code)
-                    continue
-                jsonfile = pd.read_json(path)
-                jsondict = jsonfile.to_dict()
-                timestamp = jsondict.get('chart').get('result')[0].get('timestamp')
-                name = f'{timestamp[0]}_{timestamp[-1]}.json'
-                with open(f'{filespaths}/{stock}/{name}', 'w') as json_file:
-                    json.dump(jsondict, json_file, indent=4)
-                if os.path.exists(path):
-                    os.remove(path)
-            jsnlistdaily = os.listdir(filespaths)
             
-            logger.info('working on collected per minute data _________________________________-')
-            for folder in tqdm(jsnlistdaily):
-                files = os.listdir(f'{filespaths}/{folder}')
-                file = files[-1]
-                try:
-                    jsonf = pd.read_json(f'{filespaths}/{folder}/{file}')
-                except:
-                    logger.warning("cannot read json :",f'{filespaths}/{folder}/{file}')
-                    continue
-                jsondict = jsonf.to_dict()
-                timestamp = jsondict.get('chart').get('result')[0].get('timestamp')
-                new_ts = self.return_human_timestamp(timestamp)
-                jsondict['chart']['result'][0]['timestamp'] = new_ts
-                with open(f'{filespaths}/{folder}/{file}', 'w') as json_file:
-                    json.dump(jsondict, json_file, indent=4)
+            logger.info(f"Checking updates for period1={period1} & period2={period2} for stocks per minute.")
+            
+            for stock in tqdm(symbol_list):
+                stock_symbol = stock[1].replace(' ', '')
+                link = f'https://query2.finance.yahoo.com/v8/finance/chart/{stock_symbol}?period1={period2}&period2={period1}&interval=1m&includePrePost=true&events=div%7Csplit%7Cearn&&lang=en-US&region=US'
+                response = rq.get(link, headers=self.headers)
                 
+                # Define file path and save response content if successful
+                tmppath = f'{filespaths}/{stock_symbol}/_{period2}_{period1}.json'
+                os.makedirs(os.path.dirname(tmppath), exist_ok=True)
+                if response.status_code == 200:
+                    with open(tmppath, 'wb') as jsn:
+                        jsn.write(response.content)
+                else:
+                    logger.warning(f"Request failed: {link}, Status code: {response.status_code}")
+                    continue
+                
+                # Read JSON file and save it in a more readable format
+                try:
+                    jsonfile = pd.read_json(tmppath)
+                    timestamp = jsonfile['chart']['result'][0]['timestamp']
+                    name = f'_{timestamp[0]}_{timestamp[-1]}.json'
+                    jsonfile.to_json(f'{filespaths}/{stock_symbol}/{name}', orient='records', indent=4)
+                    os.remove(tmppath)
+                except Exception as e:
+                    logger.warning(f"Failed to process JSON file: {path}. Error: {e}")
+            
+            # Process collected data files
+            logger.info("Processing collected per minute data.")
+            for folder in tqdm(os.listdir(filespaths)):
+                folder_path = os.path.join(filespaths, folder)
+                files = sorted(os.listdir(folder_path))
+                if not files:
+                    continue
+                
+                file_path = os.path.join(folder_path, files[-1])
+                try:
+                    jsonf = pd.read_json(file_path)
+                    timestamp = jsonf['chart'][0][0]['timestamp']
+                    new_ts = self.return_human_timestamp(timestamp)
+                    jsonf['chart'][0][0]['timestamp'] = new_ts
+                    
+                    # Save the modified JSON data directly
+                    jsonf.to_json(file_path, orient='records', indent=4)
+                except Exception as e:
+                    logger.warning(f"Cannot read JSON: {file_path}. Error: {e}")
+
         else:
-            logger.warning("it is not sunday today . skipping the step ...")
-        logger.info("per minute update finished _________________________________")
+            logger.warning("It is not Sunday today. Skipping the update step.")
         
+        logger.info("Per minute update finished.")
+    
     '''
     input:
     stocksymbol : symbol for the stock
@@ -659,8 +674,8 @@ class stocksManager:
             for j in range(
                 len(jsons)):
                 dt = jsons[j].split('.')[0]
-                d1 = int(dt.split('_')[0])
-                d2 = int(dt.split('_')[1])
+                d1 = int(dt.split('_')[1])
+                d2 = int(dt.split('_')[2])
                 if len(jsons) > 1:
                     next_dt = jsons[j+1].split('.')[0]
                     next_d1 = int(next_dt.split('_')[0])
@@ -669,7 +684,7 @@ class stocksManager:
                 if d1 <= startunix <= d2 and d1 <= endunix <= d2:
                     new_data = pd.read_json(
                         f'{BASE_DIR}/scrapper/data/per_minute/{stocksymbol}/{jsons[j]}')
-                    timestmp = new_data.get('chart').get('result')[0].get('timestamp', [])
+                    timestmp = new_data['chart'][0][0]['timestamp']
                     unix_timestamp = self.return_unix_timestamps(timestmp)
                     startindex,message1 = get_closer_index_if_stamp_is_missing(
                         startunix,
@@ -683,7 +698,7 @@ class stocksManager:
                     global_endindex = endindex
                     final_message = message1 + message2
                     logger.warning(f'{global_startindex},{global_endindex}')
-                    new_data = new_data.get('chart').get('result')[0].get('indicators').get('quote')[0]
+                    new_data = new_data['chart'][0][0]['indicators']["quote"][0]
                     final = {
                         'time': timestmp[global_startindex:global_endindex + 1],
                         'close': new_data['close'][global_startindex:global_endindex + 1],
@@ -750,7 +765,7 @@ class stocksManager:
         path = f'{BASE_DIR}/scrapper/data/per_minute/{stocksymbol}/'
         jsons = os.listdir(path)
 
-        start_available_date = int(jsons[0].split('.')[0].split('_')[0])
+        start_available_date = int(jsons[0].split('.')[0].split('_')[1])
         last_available_date = int(jsons[-1].split('.')[0].split('_')[-1])
         human_start_available_date = self.return_human_timestamp(
             str(start_available_date)
@@ -758,8 +773,25 @@ class stocksManager:
         human_last_available_date = self.return_human_timestamp(
             str(last_available_date)
         )
+        logger.warning(f'human_start_available_date{human_start_available_date},human_last_available_date{human_last_available_date}')
+        logger.warning(f'start_available_date{start_available_date} last_available_date{last_available_date}')
+        logger.warning(f'starttime{starttime} endtime{endtime}')
+        logger.warning(f'startunix{startunix} endunix{endunix}')
 
         try:
+            '''case 5 : if start and end date is within range'''
+            if start_available_date <= startunix and last_available_date >= endunix:
+                logger.warning("hit case 5")
+                data = collect_and_render_data(
+                        jsons,
+                        stocksymbol,
+                        startunix,
+                        endunix
+                    )
+                return {
+                    'message': "OK " ,
+                    'data':data
+                } 
             '''case 1 : if user start date and end date is far behind then our available '''
             if startunix < start_available_date and endunix < start_available_date:
                 logger.warning("hit case 1",startunix,start_available_date)
@@ -797,19 +829,6 @@ class stocksManager:
                         start_available_date,
                         endunix
                     )
-                } 
-            '''case 5 : if start and end date is within range'''
-            if start_available_date <= startunix and last_available_date <= endunix:
-                logger.warning("hit case 5")
-                data = collect_and_render_data(
-                        jsons,
-                        stocksymbol,
-                        startunix,
-                        endunix
-                    )
-                return {
-                    'message': "OK " ,
-                    'data':data
                 } 
             else:
                 return {'error':'error in finding case'}
