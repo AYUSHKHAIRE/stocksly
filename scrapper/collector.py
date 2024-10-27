@@ -834,4 +834,3 @@ class stocksManager:
                 return {'error':'error in finding case'}
         except:
             return {'error':'error'}
-            
