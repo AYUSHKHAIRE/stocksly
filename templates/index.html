@@ -4,51 +4,228 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stocksly</title>
+
+    <!-- Dark Theme CSS -->
+    <style>
+      /* Basic styling */
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        line-height: 1.6;
+      }
+
+      h1,
+      h2,
+      p {
+        color: #e0e0e0;
+      }
+
+      h1 {
+        font-size: 2em;
+        color: #bb86fc;
+      }
+
+      h2 {
+        font-size: 1.5em;
+        color: #03dac6;
+      }
+
+      a {
+        color: #03dac6;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Code blocks */
+      .code-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      code {
+        display: block;
+        background-color: #1e1e1e;
+        padding: 10px;
+        border-radius: 5px;
+        color: #c5c5c5;
+        font-size: 0.95em;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+      }
+
+      /* Copy button styling */
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #03dac6;
+        border: none;
+        color: #121212;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .copy-btn:hover {
+        background-color: #bb86fc;
+      }
+
+      /* Copy notification styling */
+      .copy-notification {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #03dac6;
+        color: #121212;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: opacity 0.3s ease;
+      }
+
+      .copy-notification.show {
+        display: block;
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
-    <h1>Welcome to Stocksly !</h1>
-    <h2>You can use Stocksly for getting stocks data in JSON format .</h2>
-    <h1>Documentation link</h1>
-    <a target="_blank" href="https://stocksly.onrender.com/">Docs</a>
-    <h1>Available stocks names</h1>
-    <a
-      target="_blank"
-      href="https://stocksly.onrender.com/stocks/get_available_stocks/"
-      >Available stocks</a
-    >
-    <h1>Get daily data for any stock available</h1>
-    <a
-      target="_blank"
-      href="https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/"
-      >NVDA stocks daily data</a
-    >
-    <p>
-      This is 30 days data only . if you wish , you can pass start and end
-      parameters .
-    </p>
-    <a
-      target="_blank"
-      href="https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/?start=2020-01-01&end 2024-10-28"
-      >NVDA stocks daily data from start=2020-01-01 and end 2024-10-28</a
-    >
-    <p>display chart also if you wish !</p>
-    <a
-      target="_blank"
-      href="https://stocksly.onrender.com/stocks/get_stock_daily_data_chart/NVDA/?start=2020-01-01&end 2024-10-28"
-      >NVDA stocks daily data chart from start=2020-01-01 and end 2024-10-28</a
-    >
-    <h1>Get per minute data for any stock available</h1>
-    <a
-      target="_blank"
-      href="https://stocksly.onrender.com/stocks/get_stock_per_minute_data/NVDA/?starttime=2024-10-22 00:00:00&endtime=2024-10-28 00:00:00"
-      >NVDA stocks per minute data from start=2020-01-01 and end 2024-10-28</a
-    >
-    <p>display chart also if you wish !</p>
-    <a
-      target="_blank"
-      href="https://stocksly.onrender.com/stocks/get_stock_per_minute_data_chart/NVDA/?starttime=2024-10-22 00:00:00&endtime=2024-10-28 00:00:00"
-      >NVDA stocks per minute data chart from start=2020-01-01 and end
-      2024-10-28</a
-    >
+    <h1>Welcome to Stocksly!</h1>
+    <h2>Retrieve stock data in JSON format easily.</h2>
+
+    <div class="section">
+      <h1>Documentation Link</h1>
+      <a class="btn" href="https://stocksly.onrender.com/" target="_blank"
+        >Visit Documentation</a
+      >
+    </div>
+
+    <div class="section">
+      <h1>Available Stock Names</h1>
+      <a
+        class="btn"
+        href="https://stocksly.onrender.com/stocks/get_available_stocks/"
+        target="_blank"
+        >View Available Stocks</a
+      >
+    </div>
+
+    <div class="section">
+      <h1>Get Daily Data for Any Available Stock</h1>
+      <a
+        class="btn"
+        href="https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/"
+        target="_blank"
+        >NVDA Stock Daily Data</a
+      >
+      <p>
+        Data for the last 30 days is provided by default. You can specify start
+        and end parameters for a custom range.
+      </p>
+
+      <div class="code-container">
+        <code
+          >https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/?start=2020-01-01&end=2024-10-28</code
+        >
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/?start=2020-01-01&end=2024-10-28')"
+        >
+          Copy
+        </button>
+      </div>
+
+      <p>Display chart data if desired!</p>
+
+      <div class="code-container">
+        <code
+          >https://stocksly.onrender.com/stocks/get_stock_daily_data_chart/NVDA/?start=2020-01-01&end=2024-10-28</code
+        >
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_daily_data_chart/NVDA/?start=2020-01-01&end=2024-10-28')"
+        >
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h1>Get Per-Minute Data for Any Available Stock</h1>
+      <a
+        class="btn"
+        href="https://stocksly.onrender.com/stocks/get_stock_per_minute_data/NVDA/?start=2024-10-22 00:00:00&end=2024-10-28 00:00:00"
+        target="_blank"
+        >NVDA Stock Per-Minute Data</a
+      >
+
+      <div class="code-container">
+        <code
+          >https://stocksly.onrender.com/stocks/get_stock_per_minute_data/NVDA/?start=2024-10-22
+          00:00:00&end=2024-10-28 00:00:00</code
+        >
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_per_minute_data/NVDA/?start=2024-10-22 00:00:00&end=2024-10-28 00:00:00')"
+        >
+          Copy
+        </button>
+      </div>
+
+      <p>Display chart data for per-minute data if desired!</p>
+
+      <div class="code-container">
+        <code
+          >https://stocksly.onrender.com/stocks/get_stock_per_minute_data_chart/NVDA/?start=2024-10-22
+          00:00:00&end=2024-10-28 00:00:00</code
+        >
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_per_minute_data_chart/NVDA/?start=2024-10-22 00:00:00&end=2024-10-28 00:00:00')"
+        >
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <!-- Copy notification container -->
+    <div id="copy-notification" class="copy-notification">
+      Copied to clipboard!
+    </div>
+
+    <script>
+      // JavaScript function to copy code to clipboard and show notification
+      function copyToClipboard(text) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            showCopyNotification();
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err);
+          });
+      }
+
+      // Show the copy notification
+      function showCopyNotification() {
+        const notification = document.getElementById("copy-notification");
+        notification.classList.add("show");
+
+        // Hide notification after 2 seconds
+        setTimeout(() => {
+          notification.classList.remove("show");
+        }, 2000);
+      }
+    </script>
   </body>
 </html>
