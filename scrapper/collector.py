@@ -48,7 +48,7 @@ class stocksManager:
         stockslist = []
         for st in stocks:
             stockslist.append(st.symbol)
-        return {'stocks':stockslist}
+        return {'stocks':stockslist[:100]}
     
     def check_if_stock_is_available(self,stocksymbol):
         stocks = StockInformation.objects.all()
