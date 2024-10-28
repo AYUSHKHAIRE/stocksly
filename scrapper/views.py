@@ -39,10 +39,10 @@ def update_data_for_today():
                 )
             if key not in catagories:
                 catagories.append(key)
-    setup_stocks_model(stocks_list_for_setup[:50])
+    setup_stocks_model(stocks_list_for_setup[:25])
     
-    STM.update_prices_for_daily(stocks_list_for_setup[:50])
-    STM.update_prices_for_per_minute(stocks_list_for_setup[:50])
+    STM.update_prices_for_daily(stocks_list_for_setup[:25])
+    STM.update_prices_for_per_minute(stocks_list_for_setup[:25])
 
     logger.info("finishing update for today ___________________________________-")
 
