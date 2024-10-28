@@ -534,9 +534,9 @@ class stocksManager:
         todays_date = datetime.now().strftime('%Y-%m-%d 00:00:00')
         today = datetime.now() 
 
-        '''Check if it is Sunday (weekday=6).'''
+        '''Check if it is Sunday (weekday=6) or first time run .'''
         logger.warning("Checking for Sunday updates.")
-        if today.weekday() == 6: 
+        if today.weekday() == 6 or self.firstrun == 0:   
             logger.warning("It is Sunday today.")
             logger.warning(f"Per minute data for today's date {todays_date}")
             
@@ -834,3 +834,4 @@ class stocksManager:
                 return {'error':'error in finding case'}
         except:
             return {'error':'error'}
+            
