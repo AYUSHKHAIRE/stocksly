@@ -6,9 +6,14 @@ from datetime import datetime,timedelta
 from scrapper.logger_config import logger
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from .mongodb_manager import AtlasClient
 
 STM = stocksManager()
-   
+AC = AtlasClient(
+    atlas_uri="mongodb+srv://ayushkhaire:ayushkhaire@ayushkhaire.fznbh.mongodb.net/?retryWrites=true&w=majority&appName=ayushkhaire",
+    dbname = "stocks"
+)
+
 def home_redirect(request):
     return redirect('get_available_stocks/')
 
@@ -24,8 +29,7 @@ it ensures the process of setup should held only once a day .
 output : nothing
 '''
 def update_data_for_today():
-    print("task was schduled !")
-
+    AC.ping()
     logger.info("starting update for today ___________________________________-")
     symbols = STM.collect_stock_symbols()
     stocks_list_for_setup = []
@@ -39,10 +43,11 @@ def update_data_for_today():
                 )
             if key not in catagories:
                 catagories.append(key)
-    setup_stocks_model(stocks_list_for_setup[:25])
+    setup_stocks_model(stocks_list_for_setup)
     
-    STM.update_prices_for_daily(stocks_list_for_setup[:25])
-    STM.update_prices_for_per_minute(stocks_list_for_setup[:25])
+    stocks_list_for_setup = stocks_list_for_setup[:100]
+    STM.update_prices_for_daily(stocks_list_for_setup)
+    STM.update_prices_for_per_minute(stocks_list_for_setup)
 
     logger.info("finishing update for today ___________________________________-")
 
