@@ -260,8 +260,7 @@ class stocksManager:
                     continue
             except:
                 continue
-            
-        shutil.rmtree(files_path)
+            os.remove(json_path)
         logger.info("Daily data update finished.")
   
     '''
