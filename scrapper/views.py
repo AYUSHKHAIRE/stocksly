@@ -45,7 +45,7 @@ def update_data_for_today():
                 catagories.append(key)
     setup_stocks_model(stocks_list_for_setup)
     
-    stocks_list_for_setup = stocks_list_for_setup[:100]
+    stocks_list_for_setup = stocks_list_for_setup[:35]
     STM.update_prices_for_daily(stocks_list_for_setup)
     STM.update_prices_for_per_minute(stocks_list_for_setup)
 
