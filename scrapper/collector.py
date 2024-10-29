@@ -11,6 +11,7 @@ from scrapper.logger_config import logger
 from scrapper.models import StockInformation , StocksCategory ,PerMinuteTrade,DayTrade
 from .mongodb_manager import AtlasClient
 import shutil
+import gc
 
 AC = AtlasClient(
     atlas_uri="mongodb+srv://ayushkhaire:ayushkhaire@ayushkhaire.fznbh.mongodb.net/?retryWrites=true&w=majority&appName=ayushkhaire",
@@ -241,6 +242,8 @@ class stocksManager:
                 if response.status_code == 200:
                     with open(json_path, 'wb') as file:
                         file.write(response.content)
+                        del response
+                        gc.collect()
                     json_data = pd.read_json(json_path)
                     timestamp = json_data['chart']['result'][0].get('timestamp')
                     if timestamp:
@@ -253,6 +256,9 @@ class stocksManager:
                                 collection_name="daily_data",
                                 documents=data_to_insert
                             )
+                            del response
+                            del json_data
+                            gc.collect()
                         except:
                             logger.warning(f'daily data insertion for {stock_symbol} failed .')
                 else:
@@ -570,6 +576,8 @@ class stocksManager:
                 if response.status_code == 200:
                     with open(tmppath, 'wb') as jsn:
                         jsn.write(response.content)
+                        del response
+                        gc.collect()
                     json_data  = pd.read_json(tmppath)
                     timestamp = json_data['chart'][0][0]['timestamp']
                     json_data = json_data['chart'][0][0]["indicators"]["quote"][0]
@@ -583,6 +591,8 @@ class stocksManager:
                                 documents=data_to_insert
                             )
                             shutil.rmtree(f'{filespaths}/{stock_symbol}/')
+                            del json_data
+                            gc.collect()
                         except:
                             logger.warning(f'per minute data insertion data insertion for {stock_symbol} failed .')
                 
