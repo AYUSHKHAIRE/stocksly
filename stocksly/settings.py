@@ -26,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = OS.environ.get("SECURITY_KEY")
-DEBUG = OS.environ.get("DEBUG")
-ALLOWED_HOSTS = OS.environ.get("ALLOWED_HOSTS")
-DATABASE_URL = OS.environ.get("DATABASE_URL")
+SECRET_KEY = os.environ.get("SECURITY_KEY")
+DEBUG = os.environ.get("DEBUG")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # Application definition
 
