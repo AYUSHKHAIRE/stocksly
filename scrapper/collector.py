@@ -8,13 +8,19 @@ from tqdm import tqdm
 import os
 from datetime import datetime,timedelta
 from scrapper.logger_config import logger
-from scrapper.models import StockInformation , StocksCategory ,PerMinuteTrade,DayTrade
 from .mongodb_manager import AtlasClient
 
+mongodb_username = "ayushkhaire"
+mongodb_password = "ayushkhaire"
+mongodb_cluster_name = "ayushkhaire"
+mongodb_app_name = "ayushkhaire"
+mngodb_database_name = "stocks"
+
 AC = AtlasClient(
-    atlas_uri="mongodb+srv://ayushkhaire:ayushkhaire@ayushkhaire.fznbh.mongodb.net/?retryWrites=true&w=majority&appName=ayushkhaire",
-    dbname = "stocks"
+    atlas_uri=f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_cluster_name}.fznbh.mongodb.net/?retryWrites=true&w=majority&appName={mongodb_app_name}",
+    dbname = mngodb_database_name
 )
+
 '''
 A class handles all stocks related operations .
 '''
@@ -50,18 +56,18 @@ class stocksManager:
     a json response of stocks data .
     '''
     def check_stock_availability(self):
-        stocks = StockInformation.objects.all()
+        return {'stocks':self.available_stocks}
+    
+    def update_stocks_list_for_today(self):
+        stocks = AC.find("daily_data")
         stockslist = []
         for st in stocks:
-            stockslist.append(st.symbol)
-        return {'stocks':stockslist}
+            stockslist.append(list(st.keys())[1])
+        self.available_stocks = stockslist
+        logger.warning("stocks list updated !")
     
     def check_if_stock_is_available(self,stocksymbol):
-        stocks = StockInformation.objects.all()
-        stockslist = []
-        for st in stocks:
-            stockslist.append(st.symbol)
-        if stocksymbol in stockslist:
+        if stocksymbol in self.available_stocks:
             return True
         else:
             return False

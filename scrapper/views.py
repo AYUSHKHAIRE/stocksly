@@ -17,7 +17,6 @@ AC = AtlasClient(
 def home_redirect(request):
     return redirect('get_available_stocks/')
 
-
 '''
 input : nothing
 
@@ -45,11 +44,17 @@ def update_data_for_today():
                 catagories.append(key)
     setup_stocks_model(stocks_list_for_setup)
     
-    stocks_list_for_setup = stocks_list_for_setup[:25]
+    stocks_list_for_setup = stocks_list_for_setup[:100]
     STM.update_prices_for_daily(stocks_list_for_setup)
     STM.update_prices_for_per_minute(stocks_list_for_setup)
 
     logger.info("finishing update for today ___________________________________-")
+
+'''
+updates stocks list for available stocks data render 
+'''
+def update_stocks_list_for_today():
+    STM.update_stocks_list_for_today()
 
 '''
 input : request
@@ -62,10 +67,10 @@ output:
 a json response containing stock data .
 '''
 def get_available_stocks(request):
-    available_stocks= STM.check_stock_availability()
     if STM.firstrun == 0:
-        update_data_for_today()
+        update_stocks_list_for_today()
         STM.firstrun = 1
+    available_stocks= STM.check_stock_availability()
     return JsonResponse(
         available_stocks,
         safe=False
@@ -242,7 +247,6 @@ def get_stocks_daily_data_chart(
     
     else:
         return HttpResponse(f"{stocksymbol} is not available.", status=404)
-
 
 def get_stocks_per_minute_data_chart(
     request, 
