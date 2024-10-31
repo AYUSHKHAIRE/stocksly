@@ -23,7 +23,7 @@ def start_scheduler():
     # Schedule a_simple_counter to run every 5 seconds
     scheduler.add_job(
         a_simple_counter,
-        trigger=IntervalTrigger(seconds=30),
+        trigger=IntervalTrigger(seconds=10),
         id="instant_counter",
         replace_existing=True,
     )
