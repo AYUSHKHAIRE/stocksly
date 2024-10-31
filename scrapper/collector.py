@@ -10,11 +10,11 @@ from datetime import datetime,timedelta
 from scrapper.logger_config import logger
 from .mongodb_manager import AtlasClient
 
-mongodb_username = OS.environ.get(mongodb_username)
-mongodb_password = OS.environ.get(mongodb_password)
-mongodb_cluster_name = OS.environ.get(mongodb_cluster_name)
-mongodb_app_name = OS.environ.get(mongodb_app_name)
-mngodb_database_name = OS.environ.get(mongodb_username)
+mongodb_username = os.environ.get(mongodb_username)
+mongodb_password = os.environ.get(mongodb_password)
+mongodb_cluster_name = os.environ.get(mongodb_cluster_name)
+mongodb_app_name = os.environ.get(mongodb_app_name)
+mngodb_database_name = os.environ.get(mongodb_username)
 
 AC = AtlasClient(
     atlas_uri=f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_cluster_name}.fznbh.mongodb.net/?retryWrites=true&w=majority&appName={mongodb_app_name}",
