@@ -9,12 +9,13 @@ import os
 from datetime import datetime,timedelta
 from scrapper.logger_config import logger
 from .mongodb_manager import AtlasClient
+from stocksly.settings import MONGODB_APPNAME,MONGODB_CLUSTER_NAME,MONGODB_DATABASE_NAME,MONGODB_PASSWORD,MONGODB_USERNAME
 
-mongodb_username = os.environ.get(mongodb_username)
-mongodb_password = os.environ.get(mongodb_password)
-mongodb_cluster_name = os.environ.get(mongodb_cluster_name)
-mongodb_app_name = os.environ.get(mongodb_app_name)
-mngodb_database_name = os.environ.get(mongodb_username)
+mongodb_username = MONGODB_USERNAME
+mongodb_password = MONGODB_PASSWORD
+mongodb_cluster_name = MONGODB_CLUSTER_NAME
+mongodb_app_name = MONGODB_APPNAME
+mngodb_database_name = MONGODB_DATABASE_NAME
 
 AC = AtlasClient(
     atlas_uri=f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_cluster_name}.fznbh.mongodb.net/?retryWrites=true&w=majority&appName={mongodb_app_name}",

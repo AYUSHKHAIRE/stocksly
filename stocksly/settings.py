@@ -14,8 +14,10 @@ from pathlib import Path
 import os
 
 import sys
-print(sys.path)
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,10 +28,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.environ.get("SECURITY_KEY")
-DEBUG = os.environ.get("DEBUG")
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(' ')
-DATABASE_URL = os.environ.get("DATABASE_URL")
+MONGODB_USERNAME = os.getenv("MONGODB_USERNAME")
+MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
+MONGODB_CLUSTER_NAME = os.getenv("MONGODB_CLUSTER_NAME")
+MONGODB_APPNAME = os.getenv("MONGODB_APPNAME")
+MONGODB_DATABASE_NAME = os.getenv("MONGODB_DATABASE_NAME")
+SECRET_KEY = os.getenv("SECURITY_KEY")
+DEBUG = os.getenv("DEBUG", "False") == "True"  # Convert to boolean
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(' ')
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 # Application definition
 
