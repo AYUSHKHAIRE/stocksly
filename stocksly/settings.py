@@ -33,7 +33,7 @@ MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
 MONGODB_CLUSTER_NAME = os.getenv("MONGODB_CLUSTER_NAME")
 MONGODB_APPNAME = os.getenv("MONGODB_APPNAME")
 MONGODB_DATABASE_NAME = os.getenv("MONGODB_DATABASE_NAME")
-SECRET_KEY = os.getenv("SECURITY_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"  # Convert to boolean
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(' ')
 DATABASE_URL = os.getenv("DATABASE_URL")
