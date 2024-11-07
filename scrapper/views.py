@@ -1,3 +1,4 @@
+from django.views.decorators.clickjacking import xframe_options_exempt, xframe_options_deny, xframe_options_sameorigin
 from django.shortcuts import render,redirect
 from django.http import JsonResponse , HttpResponse
 from .collector import stocksManager
@@ -7,11 +8,12 @@ from scrapper.logger_config import logger
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from .mongodb_manager import AtlasClient
+from stocksly.settings import ATLAS_URL,MONGODB_DATABASE_NAME
 
 STM = stocksManager()
 AC = AtlasClient(
-    atlas_uri="mongodb+srv://ayushkhaire:ayushkhaire@ayushkhaire.fznbh.mongodb.net/?retryWrites=true&w=majority&appName=ayushkhaire",
-    dbname = "stocks"
+    atlas_uri=ATLAS_URL,
+    dbname = MONGODB_DATABASE_NAME
 )
 
 def home_redirect(request):
@@ -174,7 +176,7 @@ it checks if first stpck is available or not .
 if it is available , then make a chart and render it .
 output:
 rendering html containing stock data.
-'''
+''' 
 def get_stocks_daily_data_chart(
     request, 
     stocksymbol
@@ -247,6 +249,7 @@ def get_stocks_daily_data_chart(
     
     else:
         return HttpResponse(f"{stocksymbol} is not available.", status=404)
+
 
 def get_stocks_per_minute_data_chart(
     request, 

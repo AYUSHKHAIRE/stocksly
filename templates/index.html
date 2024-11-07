@@ -105,7 +105,7 @@
 
     <div class="section">
       <h1>Documentation Link</h1>
-      <a class="btn" href="https://stocksly.onrender.com/" target="_blank"
+      <a class="btn" href="{{ hostname }}/" target="_blank"
         >Visit Documentation</a
       >
     </div>
@@ -114,7 +114,7 @@
       <h1>Available Stock Names</h1>
       <a
         class="btn"
-        href="https://stocksly.onrender.com/stocks/get_available_stocks/"
+        href="http://{{ hostname }}/stocks/get_available_stocks/"
         target="_blank"
         >View Available Stocks</a
       >
@@ -124,9 +124,9 @@
       <h1>Get Daily Data for Any Available Stock</h1>
       <a
         class="btn"
-        href="https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/"
+        href="http://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/"
         target="_blank"
-        >NVDA Stock Daily Data</a
+        >{{ stock }} Stock Daily Data</a
       >
       <p>
         Data for the last 30 days is provided by default. You can specify start
@@ -134,12 +134,13 @@
       </p>
 
       <div class="code-container">
+        <a href="http://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}"> view {{ stock }} data from {{ starttime }} and {{ endtime }}</a>
         <code
-          >https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/?start=2020-01-01&end=2024-10-28</code
+          >{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{starttime }}&end={{ endtime }}</code
         >
         <button
           class="copy-btn"
-          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_daily_data/NVDA/?start=2020-01-01&end=2024-10-28')"
+          onclick="copyToClipboard('{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}')"
         >
           Copy
         </button>
@@ -148,51 +149,26 @@
       <p>Display chart data if desired!</p>
 
       <div class="code-container">
+        <a href="http://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}"> view {{ stock }} chart from {{ starttime }} and {{ endtime }}</a>
         <code
-          >https://stocksly.onrender.com/stocks/get_stock_daily_data_chart/NVDA/?start=2020-01-01&end=2024-10-28</code
+          >{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}</code
         >
         <button
           class="copy-btn"
-          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_daily_data_chart/NVDA/?start=2020-01-01&end=2024-10-28')"
+          onclick="copyToClipboard('{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}')"
         >
           Copy
         </button>
       </div>
     </div>
 
-    <div class="section">
-      <h1>Get Per-Minute Data for Any Available Stock</h1>
+    <iframe
+      src="http://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}"
+      frameborder="0"
+      style="width: 90vw;height: 90vh;"
+    ></iframe>
 
-      <div class="code-container">
-        <code
-          >https://stocksly.onrender.com/stocks/get_stock_per_minute_data/NVDA/?start=2024-10-22
-          00:00:00&end=2024-10-28 00:00:00</code
-        >
-        <button
-          class="copy-btn"
-          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_per_minute_data/NVDA/?start=2024-10-22 00:00:00&end=2024-10-28 00:00:00')"
-        >
-          Copy
-        </button>
-      </div>
-
-      <p>Display chart data for per-minute data if desired!</p>
-
-      <div class="code-container">
-        <code
-          >https://stocksly.onrender.com/stocks/get_stock_per_minute_data_chart/NVDA/?start=2024-10-22
-          00:00:00&end=2024-10-28 00:00:00</code
-        >
-        <button
-          class="copy-btn"
-          onclick="copyToClipboard('https://stocksly.onrender.com/stocks/get_stock_per_minute_data_chart/NVDA/?start=2024-10-22 00:00:00&end=2024-10-28 00:00:00')"
-        >
-          Copy
-        </button>
-      </div>
-    </div>
-
-    <!-- Copy notification container -->
+    <!-- Notification element for successful copy action -->
     <div id="copy-notification" class="copy-notification">
       Copied to clipboard!
     </div>

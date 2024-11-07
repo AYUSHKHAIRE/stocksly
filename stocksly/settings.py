@@ -37,9 +37,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"  # Convert to boolean
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(' ')
 DATABASE_URL = os.getenv("DATABASE_URL")
-
+DATABASE_URL_LOCAL = BASE_DIR / 'db.sqlite3'
 
 # Application definition
+
+ATLAS_URL = f"mongodb+srv://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@{MONGODB_CLUSTER_NAME}.fznbh.mongodb.net/?retryWrites=true&w=majority&appName={MONGODB_APPNAME}",
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -95,8 +97,8 @@ DATABASES = {
     }
 }
 
-import dj_database_url
-DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
+# import dj_database_url
+# DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
 
 
 # Password validation
@@ -140,3 +142,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+X_FRAME_OPTIONS = 'ALLOWALL'
