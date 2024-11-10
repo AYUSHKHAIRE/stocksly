@@ -105,23 +105,23 @@
 
     <div class="section">
       <h1>Documentation Link</h1>
-      <a class="btn" href="{{ hostname }}/" target="_blank">Visit Documentation</a>
+      <a class="btn" href="https://{{ hostname }}/" target="_blank">Visit Documentation</a>
     </div>
 
     <div class="section">
       <h1>Available Stock Names</h1>
-      <a class="btn" href="http://{{ hostname }}/stocks/get_available_stocks/" target="_blank">View Available Stocks</a>
+      <a class="btn" href="https://{{ hostname }}/stocks/get_available_stocks/" target="_blank">View Available Stocks</a>
     </div>
 
     <div class="section">
       <h1>Get Daily Data for Any Available Stock</h1>
-      <a class="btn" href="http://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/" target="_blank">{{ stock }} Stock Daily Data</a>
+      <a class="btn" href="https://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/" target="_blank">{{ stock }} Stock Daily Data</a>
       <p>Data for the last 30 days is provided by default. You can specify start and end parameters for a custom range.</p>
 
       <div class="code-container">
-        <a href="http://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}">View {{ stock }} data from {{ starttime }} and {{ endtime }}</a>
+        <a href="https://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}">View {{ stock }} data from {{ starttime }} and {{ endtime }}</a>
         <code>{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}</code>
-        <button class="copy-btn" onclick="copyToClipboard('{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}')">
+        <button class="copy-btn" onclick="copyToClipboard('https://{{ hostname }}/stocks/get_stock_daily_data/{{ stock }}/?start={{ starttime }}&end={{ endtime }}')">
           Copy
         </button>
       </div>
@@ -129,22 +129,22 @@
       <p>Display chart data if desired!</p>
 
       <div class="code-container">
-        <a href="http://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}">View {{ stock }} chart from {{ starttime }} and {{ endtime }}</a>
+        <a href="https://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}">View {{ stock }} chart from {{ starttime }} and {{ endtime }}</a>
         <code>{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}</code>
-        <button class="copy-btn" onclick="copyToClipboard('{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}')">
+        <button class="copy-btn" onclick="copyToClipboard('https://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}')">
           Copy
         </button>
       </div>
 
-      <iframe src="http://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}" frameborder="0" style="width: 90vw; height: 90vh;"></iframe>
+      <iframe src="https://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}" frameborder="0" style="width: 90vw; height: 50vh;"></iframe>
     </div>
 
     <div class="section">
       <h1>Get Per Minute Data for Any Available Stock</h1>
       <div class="code-container">
-        <a href="http://{{ hostname }}/stocks/get_stock_per_minute_data/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}">View {{ stock }} data from {{ startperminutetime }} and {{ endperminutetime }}</a>
-        <code>http://{{ hostname }}/stocks/get_stock_per_minute_data/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}</code>
-        <button class="copy-btn" onclick="copyToClipboard('http://{{ hostname }}/stocks/get_stock_per_minute_data/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}')">
+        <a href="https://{{ hostname }}/stocks/get_stock_per_minute_data/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}">View {{ stock }} data from {{ startperminutetime }} and {{ endperminutetime }}</a>
+        <code>https://{{ hostname }}/stocks/get_stock_per_minute_data/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}</code>
+        <button class="copy-btn" onclick="copyToClipboard('https://{{ hostname }}/stocks/get_stock_per_minute_data/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}')">
           Copy
         </button>
       </div>
@@ -152,14 +152,14 @@
       <p>Display chart data if desired!</p>
 
       <div class="code-container">
-        <a href="http://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}">View {{ stock }} chart from {{ startperminutetime }} and {{ endperminutetime }}</a>
-        <code>http://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}</code>
-        <button class="copy-btn" onclick="copyToClipboard('http://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}')">
+        <a href="https://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}">View {{ stock }} chart from {{ startperminutetime }} and {{ endperminutetime }}</a>
+        <code>https://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}</code>
+        <button class="copy-btn" onclick="copyToClipboard('https://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}')">
           Copy
         </button>
       </div>
 
-      <iframe src="http://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}" frameborder="0" style="width: 90vw; height: 90vh;"></iframe>
+      <iframe src="https://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}" frameborder="0" style="width: 90vw; height: 50vh;"></iframe>
     </div>
 
     <!-- Notification element for successful copy action -->
