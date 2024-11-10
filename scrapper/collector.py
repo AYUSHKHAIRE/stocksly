@@ -60,10 +60,8 @@ class stocksManager:
         return {'stocks':self.available_stocks}
     
     def update_stocks_list_for_today(self):
-        stocks = AC.find("daily_data")
-        stockslist = []
-        for st in stocks:
-            stockslist.append(list(st.keys())[1])
+        stocks = AC.find("master")
+        stockslist = stocks[0]['stocks']
         self.available_stocks = stockslist
         logger.warning("stocks list updated !")
     

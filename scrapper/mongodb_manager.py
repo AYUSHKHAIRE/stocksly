@@ -24,10 +24,17 @@ class AtlasClient:
         return result
 
 
-    def find(self, collection_name, filter={}, limit=0):
+    def find(self, collection_name, filter={}, limit=0, keys_only=False):
         collection = self.database[collection_name]
-        items = list(collection.find(filter=filter, limit=limit))
+        if keys_only:
+            logger.warning("fetching all keys")
+            items = collection.find(filter=filter, limit=limit, projection={'_id': 0})
+            logger.warning("fetched all keys")
+            return [list(doc.keys()) for doc in items]
+        else:
+            items = list(collection.find(filter=filter, limit=limit))
         return items
+
     
     def insert(self, collection_name, documents):
         """
