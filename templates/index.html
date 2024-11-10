@@ -100,6 +100,16 @@
     </style>
   </head>
   <body>
+    <hr>
+    <div style="display: flex;justify-content: space-between;">
+      <div>
+      created by <a href="https://www.linkedin.com/in/ayushkhaire" target="_blank" >Ayush Khaire</a> . 
+    </div>
+    <div>
+      public repository link <a href="https://github.com/AYUSHKHAIRE/stocksly/" target="_blank" > AYUSHKHAIRE/stocksly </a>
+    </div>
+    </div>
+    <hr>
     <h1>Welcome to Stocksly!</h1>
     <h2>Retrieve stock data in JSON format easily.</h2>
 
@@ -136,7 +146,7 @@
         </button>
       </div>
 
-      <iframe src="https://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}" frameborder="0" style="width: 90vw; height: 50vh;"></iframe>
+      <iframe src="https://{{ hostname }}/stocks/get_stock_daily_data_chart/{{ stock }}/?start={{ starttime }}&end={{ endtime }}" frameborder="0" style="width: 90vw; height: 90vh;"></iframe>
     </div>
 
     <div class="section">
@@ -159,7 +169,7 @@
         </button>
       </div>
 
-      <iframe src="https://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}" frameborder="0" style="width: 90vw; height: 50vh;"></iframe>
+      <iframe src="https://{{ hostname }}/stocks/get_stock_per_minute_data_chart/{{ stock }}/?start={{ startperminutetime }}&end={{ endperminutetime }}" frameborder="0" style="width: 90vw; height: 90vh;"></iframe>
     </div>
 
     <!-- Notification element for successful copy action -->
