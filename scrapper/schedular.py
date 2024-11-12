@@ -9,6 +9,7 @@ import requests
 
 def a_request_firer():
     r = requests.get('https://stocksly.onrender.com/')
+    logger.warning("trigger fired ", r.status_code )
 
 def start_scheduler():
     scheduler = BackgroundScheduler()
@@ -24,7 +25,7 @@ def start_scheduler():
     # Schedule a_simple_counter to run every 5 seconds
     scheduler.add_job(
         a_request_firer,
-        trigger=IntervalTrigger(seconds=30),
+        trigger=IntervalTrigger(seconds=900),
         id="instant_counter",
         replace_existing=True,
     )
